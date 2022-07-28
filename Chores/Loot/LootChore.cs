@@ -156,7 +156,7 @@ namespace LeagueChores
 			if (settings == null)
 				settings = LCU.validatedSummonerSettings.loot;
 
-			var honorCapsules = loot.FirstOrDefault((x) => x.lootId == "CHEST_206" || x.lootId == "CHEST_207" || x.lootId == "CHEST_208" || x.lootId == "CHEST_162");
+			var honorCapsules = loot.FirstOrDefault((x) => x.lootId == "CHEST_206" || x.lootId == "CHEST_207" || x.lootId == "CHEST_208" || x.lootId == "CHEST_209" || x.lootId == "CHEST_210" || x.lootId == "CHEST_211"  || x.lootId == "CHEST_518" || x.lootId == "CHEST_542" || x.lootId == "CHEST_162" || x.lootId == "CHEST_187");
 			if (honorCapsules == null || honorCapsules.count == 0)
 				return null;
 
@@ -290,7 +290,7 @@ namespace LeagueChores
 				if (hasChampion)
 				{
 					if (champMastery == null || champMastery.championLevel < 5)
-						champ.count -= settings.lowLevelKeepCount.Value;
+						champCount -= settings.lowLevelKeepCount.Value;
 					else if (champMastery.championLevel == 6)
 						champCount -= settings.level6KeepCount.Value;
 					else if (champMastery.championLevel == 5)
@@ -429,13 +429,94 @@ namespace LeagueChores
 			return items.ToArray();
 		}
 
+		async Task<Item[]> GetAllEmotes(LootData settings = null, ActionRules rules = ActionRules.None, IEnumerable<PlayerLoot> loot = null)
+		{
+			if (loot == null)
+				loot = await GetInventory();
+			if (settings == null)
+				settings = LCU.validatedSummonerSettings.loot;
+
+			var emotes = loot.Where((l) => l.type.Contains("EMOTE") && l.itemStatus == "OWNED");
+			var items = new List<Item>();
+			foreach (var emote in emotes)
+			{
+				var emoteCount = emote.count;
+				if (emoteCount <= 0)
+					continue;
+
+				var item = new Item(emote, ItemType.Emote, emoteCount);
+				switch (rules)
+				{
+					case ActionRules.None:
+						break;
+
+					case ActionRules.RemoveRules:
+						if (settings.forgeEmotes.Value)
+						{
+							var uri = $"/lol-loot/v1/recipes/{emote.type}_forge/craft?repeat={emoteCount}";
+							var body = $"[\"{emote.lootId}\"]";
+							item.AddAction("Remove", uri, body);
+						}
+						break;
+
+					default:
+						throw new ArgumentException("Invalid/Unhandled argument given for ActionRules");
+				}
+
+				items.Add(item);
+			}
+
+			return items.ToArray();
+		}
+
+		async Task<Item[]> GetAllIcons(LootData settings = null, ActionRules rules = ActionRules.None, IEnumerable<PlayerLoot> loot = null)
+		{
+			if (loot == null)
+				loot = await GetInventory();
+			if (settings == null)
+				settings = LCU.validatedSummonerSettings.loot;
+			/*foreach (var loo in loot) { Console.WriteLine(loo.itemStatus == "OWNED"); }*/
+			var icons = loot.Where((l) => l.type.Contains("ICON") && l.itemStatus == "OWNED");
+			var items = new List<Item>();
+			foreach (var icon in icons)
+			{
+				var iconCount = icon.count;
+				if (iconCount <= 0)
+					continue;
+				var item = new Item(icon, ItemType.Icon, iconCount);
+				switch (rules)
+				{
+					case ActionRules.None:
+						break;
+
+					case ActionRules.RemoveRules:
+						if (settings.disenchantIcons.Value)
+						{
+							var uri = $"/lol-loot/v1/recipes/{icon.type}_disenchant/craft?repeat={iconCount}";
+							var body = $"[\"{icon.lootId}\"]";
+							item.AddAction("Remove", uri, body);
+						}
+						break;
+
+					default:
+						throw new ArgumentException("Invalid/Unhandled argument given for ActionRules");
+				}
+
+				items.Add(item);
+			}
+
+			return items.ToArray();
+		}
+
 		private async Task<string> GetDefaultItemActionNames(List<Item> items)
 		{
 			string itemList = "";
 			var nonChampionsList = items.Where(i => i.
 				type != ItemType.Champion && 
 				i.type != ItemType.Skin &&
-				i.type != ItemType.Eternal);
+				i.type != ItemType.Eternal &&
+				i.type != ItemType.Emote &&
+				i.type != ItemType.Icon);
 			foreach (var item in nonChampionsList)
 			{
 				if (item.hasDefaultAction == false)
@@ -511,6 +592,30 @@ namespace LeagueChores
 			{
 				itemList += $" - {item.defaultActionName} {item.count}x {item.item.localizedName}\n";
 			}
+
+			var icons = items.Where(i => i.type == ItemType.Icon);
+			if (icons.Count() > 10)
+			{
+				var champCount = icons.Aggregate<Item, long>(0, (current, item) => current + item.count);
+				var totalValue = icons.Aggregate<Item, long>(0, (current, item) => current + item.count * item.item.disenchantValue);
+				itemList += $" - {champCount}x icon for {totalValue} orange essense";
+			}
+			else foreach (var item in icons)
+				{
+					itemList += $" - {item.defaultActionName} {item.count}x icon: {item.item.itemDesc} {item.item.disenchantValue} orange essence\n";
+				}
+
+			var emotes = items.Where(i => i.type == ItemType.Emote);
+			if (emotes.Count() > 10)
+			{
+				var champCount = emotes.Aggregate<Item, long>(0, (current, item) => current + item.count);
+				var totalValue = emotes.Aggregate<Item, long>(0, (current, item) => current + item.count);
+				itemList += $" - {champCount} --> {totalValue} new emotes";
+			}
+			else foreach (var item in emotes)
+				{
+					itemList += $" - {item.defaultActionName} {item.count}x emote: {item.item.itemDesc}\n";
+				}
 
 			return itemList;
 		}
@@ -620,12 +725,14 @@ namespace LeagueChores
 					// Refresh our loot inventory
 					loot = await GetInventory();
 
-					items = AddItems(items, await GetAllEternals(settings, ActionRules.RemoveRules, loot));
-					items = AddItems(items, await GetAllSkins(settings, ActionRules.RemoveRules, loot)); // Remove duplicates
-					items = AddItems(items, await GetAllChampions(settings, ActionRules.RemoveRules, loot));
-					actionsTaken += await PerformDefaultActions(items, startedManually, avoidActions);
-					loot = await GetInventory(); // Refresh inventory
-					items.Clear();
+				items = AddItems(items, await GetAllEternals(settings, ActionRules.RemoveRules, loot));
+				items = AddItems(items, await GetAllIcons(settings, ActionRules.RemoveRules, loot));
+				items = AddItems(items, await GetAllEmotes(settings, ActionRules.RemoveRules, loot));
+				items = AddItems(items, await GetAllSkins(settings, ActionRules.RemoveRules, loot)); // Remove duplicates
+				items = AddItems(items, await GetAllChampions(settings, ActionRules.RemoveRules, loot));
+				actionsTaken += await PerformDefaultActions(items, startedManually, avoidActions);
+				loot = await GetInventory(); // Refresh inventory
+				items.Clear();
 
 					items = AddItems(items, await GetAllSkins(settings, ActionRules.RerollRules, loot)); // Reroll skins
 					actionsTaken += await PerformDefaultActions(items, startedManually, avoidActions);

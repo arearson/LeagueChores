@@ -27,8 +27,8 @@ namespace LeagueChores.Chores.ChampSelect
 			box.Checked = value != null ? (bool)value : defaultValue;
 			box.CheckedChanged += (s, e) =>
 			{
-				if (summonerData.hotkey == null)
-					summonerData.hotkey = new Settings.HotkeyData();
+				if (summonerData.champSelect == null)
+					summonerData.champSelect = new ChampSelectData();
 
 				summonerData.champSelect[name] = box.Checked;
 				window.OnSettingsChanged();

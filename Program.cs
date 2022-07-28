@@ -151,10 +151,19 @@ namespace LeagueChores
 				if (value == willStartWithWindows)
 					return;
 
-				if (value)
-					m_bootKey.SetValue(applicationName, Application.ExecutablePath);
-				else
-					m_bootKey.DeleteValue(applicationName, false);
+				if (value) 
+				{ 
+					m_bootKey.SetValue(applicationName, Application.ExecutablePath); 
+					m_startOnBootMenuItem.Checked = value;
+					Settings.File.data.startWithWindows = value;
+				}
+				else 
+				{ 
+					m_bootKey.DeleteValue(applicationName, false); 
+					m_startOnBootMenuItem.Checked = value;
+					Settings.File.data.startWithWindows = value;
+				}
+				ShowBalloon($"{applicationName} {(value ? "will now" : "won't")} start with Windows from now on.");
 #endif
 			}
 		}

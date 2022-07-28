@@ -81,6 +81,8 @@ namespace LeagueChores.Chores.Loot
 		ChampionCapsule,
 		EternalsCapsule,
 		HonorCapsule,
-		KeyFragment
+		KeyFragment,
+		Emote,
+		Icon
 	};
 }

@@ -58,10 +58,11 @@
     <ApplicationIcon>Windows\PoroIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>9F90A7A26A310B72B8094F2A698ED99B15B26FC4</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>C36B8125662D152D089BA2D5B009071CBBE1703E</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>LeagueChores_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>
+    </ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>

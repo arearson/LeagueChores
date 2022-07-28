@@ -73,6 +73,8 @@ namespace LeagueChores.Chores.Loot
 			var openCapsules =					imgui.AddCheckbox("openCapsules",					"Open all eternals and champion capsules");
 			var openChests =					imgui.AddCheckbox("openChests",						"Open all chests");
 			var disenchantEternals =			imgui.AddCheckbox("disenchantEternals",				"Disenchant all eternals");
+			var disenchantIcons =				imgui.AddCheckbox("disenchantIcons",				"Disenchant all Icons");
+			var forgeEmotes =					imgui.AddCheckbox("forgeEmotes",					"re-forge all Emotes");
 			var disenchantDuplicateSkins =		imgui.AddCheckbox("disenchantDuplicateSkins",		"Disenchant all duplicate skins");
 			var rerollAllOwnedSkins =			imgui.AddCheckbox("rerollAllOwnedSkins",			"Reroll all owned skins");
 
@@ -98,6 +100,8 @@ namespace LeagueChores.Chores.Loot
 			ApplyCheckboxBehaviour(openChests,					"openChests",					window, baseSummonerData, summonerData, LootDataDefaults.openChests);
 			ApplyCheckboxBehaviour(disenchantChampions,			"disenchantChampions",			window, baseSummonerData, summonerData, LootDataDefaults.disenchantChampions);
 			ApplyCheckboxBehaviour(disenchantEternals,			"disenchantEternals",			window, baseSummonerData, summonerData, LootDataDefaults.disenchantEternals);
+			ApplyCheckboxBehaviour(disenchantIcons,				"disenchantIcons",				window, baseSummonerData, summonerData, LootDataDefaults.disenchantIcons);
+			ApplyCheckboxBehaviour(forgeEmotes,					"forgeEmotes",					window, baseSummonerData, summonerData, LootDataDefaults.forgeEmotes);
 			ApplyCheckboxBehaviour(disenchantDuplicateSkins,	"disenchantDuplicateSkins",		window, baseSummonerData, summonerData, LootDataDefaults.disenchantDuplicateSkins);
 			ApplyCheckboxBehaviour(rerollAllOwnedSkins,			"rerollAllOwnedSkins",			window, baseSummonerData, summonerData, LootDataDefaults.rerollAllOwnedSkins);
 			ApplyCheckboxBehaviour(showDisenchantNotification,	"showDisenchantNotification",	window, baseSummonerData, summonerData, LootDataDefaults.showDisenchantNotification);
