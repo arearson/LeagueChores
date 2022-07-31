@@ -156,7 +156,7 @@ namespace LeagueChores
 			if (settings == null)
 				settings = LCU.validatedSummonerSettings.loot;
 
-			var honorCapsules = loot.FirstOrDefault((x) => x.lootId == "CHEST_206" || x.lootId == "CHEST_207" || x.lootId == "CHEST_208" || x.lootId == "CHEST_209" || x.lootId == "CHEST_210" || x.lootId == "CHEST_211"  || x.lootId == "CHEST_518" || x.lootId == "CHEST_542" || x.lootId == "CHEST_162" || x.lootId == "CHEST_187");
+			var honorCapsules = loot.FirstOrDefault((x) => x.lootId == "CHEST_206" || x.lootId == "CHEST_207" || x.lootId == "CHEST_208" || x.lootId == "CHEST_209" || x.lootId == "CHEST_210" || x.lootId == "CHEST_211"  || x.lootId == "CHEST_518" || x.lootId == "CHEST_542" || x.lootId == "CHEST_162" || x.lootId == "CHEST_187" || x.lootId == "CHEST_541");
 			if (honorCapsules == null || honorCapsules.count == 0)
 				return null;
 
