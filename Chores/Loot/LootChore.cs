@@ -12,7 +12,13 @@ namespace LeagueChores
 {
 	internal class LootChore
 	{
-		public static readonly string[] chestNames = new string[] { "CHEST_72", "CHEST_55", "CHEST_54", "CHEST_56", "CHEST_57", "CHEST_58", "CHEST_59", "CHEST_60", "CHEST_61", "CHEST_62", "CHEST_63", "CHEST_64", "CHEST_65", "CHEST_66", "CHEST_69", "CHEST_53", "CHEST_32", "CHEST_new_player", "CHEST_day_one", "CHEST_224", "CHEST_promotion", "CHEST_96", "CHEST_97", "CHEST_98", "CHEST_99", "CHEST_champion_mastery", "CHEST_generic" }; // Taken from the client source
+		public static readonly string[] chestNames = new string[] { 
+			"CHEST_72", "CHEST_55", "CHEST_54", "CHEST_56", "CHEST_57", "CHEST_58",
+			"CHEST_59", "CHEST_60", "CHEST_61", "CHEST_62", "CHEST_63", "CHEST_64", 
+			"CHEST_65", "CHEST_66", "CHEST_69", "CHEST_53", "CHEST_32", "CHEST_new_player",
+			"CHEST_day_one", "CHEST_224", "CHEST_promotion", "CHEST_96", "CHEST_97",
+			"CHEST_98", "CHEST_99", "CHEST_champion_mastery", "CHEST_generic"
+        }; // Taken from the client source
 
 		public LootChoreTask task = null;
 
@@ -156,7 +162,13 @@ namespace LeagueChores
 			if (settings == null)
 				settings = LCU.validatedSummonerSettings.loot;
 
-			var honorCapsules = loot.FirstOrDefault((x) => x.lootId == "CHEST_206" || x.lootId == "CHEST_207" || x.lootId == "CHEST_208" || x.lootId == "CHEST_209" || x.lootId == "CHEST_210" || x.lootId == "CHEST_211"  || x.lootId == "CHEST_518" || x.lootId == "CHEST_542" || x.lootId == "CHEST_162" || x.lootId == "CHEST_187" || x.lootId == "CHEST_541" || x.lootId == "CHEST_129");
+			var honorCapsules = loot.FirstOrDefault((x) => x.lootId == "CHEST_206" ||
+			x.lootId == "CHEST_207" || x.lootId == "CHEST_208" || x.lootId == "CHEST_209" ||
+			x.lootId == "CHEST_210" || x.lootId == "CHEST_211"  || x.lootId == "CHEST_518" ||
+			x.lootId == "CHEST_542" || x.lootId == "CHEST_162" || x.lootId == "CHEST_187" ||
+			x.lootId == "CHEST_541" || x.lootId == "CHEST_129" || x.lootId == "CHEST_348" ||
+			x.lootId == "CHEST_563" || x.lootId == "CHEST_601"
+            );
 			if (honorCapsules == null || honorCapsules.count == 0)
 				return null;
 
