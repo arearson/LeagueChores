@@ -253,7 +253,7 @@ namespace LeagueChores
 				string lockFileFolder = Settings.File.data.lcuLocation;
 				if (IsValidClientFolder(lockFileFolder) == false)
 				{
-					lockFileFolder = "C:/Riot Games/League of Legends";
+					lockFileFolder = "E:/Riot Games/League of Legends";
 					if (IsValidClientFolder(lockFileFolder) == false)
 					{
 						foreach (var process in processes)
